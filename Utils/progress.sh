@@ -216,7 +216,9 @@ progress() {
     render_recent_output() {
         local -a recent_lines=()
         local line_count=0 recent_line
-        mapfile -t recent_lines < <(tail -n "$box_line_count" "$display_file" 2>/dev/null)
+        while IFS= read -r recent_line || [[ -n "$recent_line" ]]; do
+            recent_lines+=("$recent_line")
+        done < <(tail -n "$box_line_count" "$display_file" 2>/dev/null)
 
         for recent_line in "${recent_lines[@]}"; do
             print_box_line "$recent_line"
